@@ -7,7 +7,13 @@ const CharacterList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedHouse, setSelectedHouse] = useState("");
 
-  const houses = ["Gryffindor", "Slytherin", "Ravenclaw", "Hufflepuff"];
+  const houses = [
+    "Gryffindor",
+    "Slytherin",
+    "Ravenclaw",
+    "Hufflepuff",
+    "No House",
+  ];
 
   // Personagens principais que aparecem na home se não houver filtro
   const featuredNames = [
@@ -31,13 +37,21 @@ const CharacterList = () => {
     (char) => char.name !== "Lily Potter" && char.name !== "James Potter"
   );
 
-  // Filtra personagens por casa e nome
+  // Filtra personagens por casa e nome, considerando 'no-house'
   const filteredCharacters = filteredCharactersWithoutLilyJames.filter(
     (char) => {
-      const matchHouse = selectedHouse ? char.house === selectedHouse : true;
+      let matchHouse = true;
+
+      if (selectedHouse === "no-house") {
+        matchHouse = !char.house || char.house === "";
+      } else if (selectedHouse) {
+        matchHouse = char.house === selectedHouse;
+      }
+
       const matchName = char.name
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
+
       return matchHouse && matchName;
     }
   );
@@ -58,7 +72,7 @@ const CharacterList = () => {
       <div className="filter-form">
         <form
           onSubmit={(e) => {
-            e.preventDefault(); // previne submit de form recarregar a página
+            e.preventDefault(); // previne submit do form recarregar a página
           }}
         >
           {/* Busca por nome */}
@@ -76,7 +90,10 @@ const CharacterList = () => {
           >
             <option value="">All Houses</option>
             {houses.map((house) => (
-              <option key={house} value={house}>
+              <option
+                key={house}
+                value={house === "No House" ? "no-house" : house}
+              >
                 {house}
               </option>
             ))}
@@ -87,9 +104,12 @@ const CharacterList = () => {
       {/* Renderização dos personagens */}
       {!selectedHouse && !searchTerm ? (
         houses.map((house) => {
-          const houseChars = charactersToShow.filter(
-            (char) => char.house === house
-          );
+          const houseChars =
+            house === "No House"
+              ? charactersToShow.filter(
+                  (char) => !char.house || char.house === ""
+                )
+              : charactersToShow.filter((char) => char.house === house);
 
           return (
             <div key={house}>
