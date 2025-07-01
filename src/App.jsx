@@ -26,9 +26,14 @@ function App() {
         {isPlaying ? "🔊 Stop Music" : "🔮 Play Music"}
       </button>
 
-      <audio ref={audioRef} src="/music/music.wizard.mp3" preload="auto" loop />
+      <audio
+        ref={audioRef}
+        src={`${import.meta.env.BASE_URL}music/music.wizard.mp3`}
+        preload="auto"
+        loop
+      />
 
-      <Router>
+      <Router basename={import.meta.env.BASE_URL}>
         <Routes>
           <Route path="/" element={<CharacterList />} />
           <Route path="/detail/:name" element={<CharacterDetail />} />

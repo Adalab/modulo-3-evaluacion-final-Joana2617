@@ -21,6 +21,7 @@ const CharacterList = () => {
     "Draco Malfoy",
     "Luna Lovegood",
     "Cedric Diggory",
+    "Kingsley Shacklebolt",
   ];
 
   useEffect(() => {
